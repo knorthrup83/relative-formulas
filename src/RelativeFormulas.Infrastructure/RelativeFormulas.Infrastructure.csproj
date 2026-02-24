@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\RelativeFormulas.Application\RelativeFormulas.Application.csproj" />
+    <ProjectReference Include="..\RelativeFormulas.Domain\RelativeFormulas.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
