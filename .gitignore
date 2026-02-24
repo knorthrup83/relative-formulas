@@ -1,2 +1,6 @@
 [Bb]in/
 [Oo]bj/
+appsettings.Local.json
+.vs/
+*.user
+wwwroot/uploads/
