@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RelativeFormulas.Domain\RelativeFormulas.Domain.csproj" />
+    <ProjectReference Include="..\RelativeFormulas.Infrastructure\RelativeFormulas.Infrastructure.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

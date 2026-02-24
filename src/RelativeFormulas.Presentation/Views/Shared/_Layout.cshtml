@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Relative Formulas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="container">
+        <nav>
+            <ul>
+                <li><a href="/" aria-label="Home"><strong>Relative Formulas</strong></a></li>
+            </ul>
+            <ul>
+                <li><a asp-controller="Recipes" asp-action="Index">Recipes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <footer class="container">
+        <small>&copy; @DateTime.Now.Year Relative Formulas — A Family Recipe Archive</small>
+    </footer>
+
+    <script src="https://unpkg.com/htmx.org@@2.0.4"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

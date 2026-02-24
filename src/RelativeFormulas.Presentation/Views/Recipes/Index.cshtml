@@ -1,0 +1,30 @@
+@model List<RelativeFormulas.Domain.Entities.Recipe>
+@{
+    ViewData["Title"] = "Recipes";
+}
+
+<h1>Family Recipes</h1>
+
+@if (!Model.Any())
+{
+    <p>No recipes yet.</p>
+}
+else
+{
+    <div class="grid">
+        @foreach (var recipe in Model)
+        {
+            <article>
+                <header>
+                    <h2>
+                        <a asp-action="Detail" asp-route-slug="@recipe.Slug">@recipe.Title</a>
+                    </h2>
+                </header>
+                <p>@recipe.TranscriptionText[..Math.Min(150, recipe.TranscriptionText.Length)]...</p>
+                <footer>
+                    <small>Added @recipe.CreatedAt.ToString("MMMM d, yyyy")</small>
+                </footer>
+            </article>
+        }
+    </div>
+}

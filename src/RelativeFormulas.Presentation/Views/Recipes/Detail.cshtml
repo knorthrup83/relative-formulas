@@ -1,0 +1,31 @@
+@model RelativeFormulas.Domain.Entities.Recipe
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<article>
+    <header>
+        <h1>@Model.Title</h1>
+        <small>Added @Model.CreatedAt.ToString("MMMM d, yyyy")</small>
+    </header>
+
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <figure>
+            <img src="@Model.ImagePath" alt="Original recipe card for @Model.Title" />
+            <figcaption>Original recipe card</figcaption>
+        </figure>
+    }
+
+    <section>
+        <h2>Transcription</h2>
+        <blockquote>@Model.TranscriptionText</blockquote>
+    </section>
+
+    <section>
+        <h2>Instructions</h2>
+        <p>@Model.InstructionsText</p>
+    </section>
+</article>
+
+<a asp-action="Index">&larr; Back to all recipes</a>
