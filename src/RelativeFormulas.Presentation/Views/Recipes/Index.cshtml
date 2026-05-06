@@ -3,8 +3,6 @@
     ViewData["Title"] = "Recipes";
 }
 
-@* <h1>Family Recipes</h1> *@
-
 @if (!Model.Any())
 {
     <p>No recipes yet.</p>
@@ -14,21 +12,7 @@ else
     <div class="recipe-grid">
         @foreach (var recipe in Model)
         {
-            <article class="recipe-card">
-                <header>
-                    <h2>
-                        <a asp-action="Detail" asp-route-slug="@recipe.Slug">@recipe.Title</a>
-                    </h2>
-                </header>
-                <p>@recipe.TranscriptionText[..Math.Min(150, recipe.TranscriptionText.Length)]...</p>
-                
-                <footer>
-                    <div class="tag-list">
-                        <a class="tag" href="/tags/dessert">Dessert</a>
-                        <a class="tag" href="/tags/family-favorite">Family Favorite</a>
-                    </div>
-                </footer>
-            </article>
+            @await Html.PartialAsync("_RecipeCard", recipe)
         }
     </div>
 }

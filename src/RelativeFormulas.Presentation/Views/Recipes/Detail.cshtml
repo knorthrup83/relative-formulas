@@ -7,6 +7,7 @@
     <header>
         <h1>@Model.Title</h1>
         <small>Added @Model.CreatedAt.ToString("MMMM d, yyyy")</small>
+        @await Html.PartialAsync("~/Views/Shared/_TagList.cshtml", Model.RecipeTags)
     </header>
 
     @if (!string.IsNullOrEmpty(Model.ImagePath))
@@ -15,6 +16,26 @@
             <img src="@Model.ImagePath" alt="Original recipe card for @Model.Title" />
             <figcaption>Original recipe card</figcaption>
         </figure>
+    }
+
+    @if (Model.RecipeIngredients.Any())
+    {
+        <section>
+            <h2>Ingredients</h2>
+            <ul>
+                @foreach (var ri in Model.RecipeIngredients)
+                {
+                    <li>
+                        @ri.Quantity
+                        @if (!string.IsNullOrEmpty(ri.Unit))
+                        {
+                            <span>@ri.Unit</span>
+                        }
+                        @ri.Ingredient.Name
+                    </li>
+                }
+            </ul>
+        </section>
     }
 
     <section>

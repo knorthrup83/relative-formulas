@@ -1,0 +1,8 @@
+@model IEnumerable<RelativeFormulas.Domain.Entities.RecipeTag>
+
+<div class="tag-list">
+    @foreach (var rt in Model)
+    {
+        <span class="tag">@rt.Tag.Name</span>
+    }
+</div>

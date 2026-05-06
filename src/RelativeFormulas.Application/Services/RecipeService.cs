@@ -16,6 +16,8 @@ public class RecipeService
     public async Task<List<Recipe>> GetAllAsync()
     {
         return await _context.Recipes
+            .Include(r => r.RecipeTags)
+                .ThenInclude(rt => rt.Tag)
             .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
     }
@@ -23,6 +25,10 @@ public class RecipeService
     public async Task<Recipe?> GetBySlugAsync(string slug)
     {
         return await _context.Recipes
+            .Include(r => r.RecipeTags)
+                .ThenInclude(rt => rt.Tag)
+            .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
             .FirstOrDefaultAsync(r => r.Slug == slug);
     }
 }

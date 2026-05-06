@@ -1,0 +1,13 @@
+@model RelativeFormulas.Domain.Entities.Recipe
+
+<article class="recipe-card">
+    <header>
+        <h2>
+            <a asp-controller="Recipes" asp-action="Detail" asp-route-slug="@Model.Slug">@Model.Title</a>
+        </h2>
+    </header>
+    <p>@Model.TranscriptionText[..Math.Min(150, Model.TranscriptionText.Length)]&hellip;</p>
+    <footer>
+        @await Html.PartialAsync("~/Views/Shared/_TagList.cshtml", Model.RecipeTags)
+    </footer>
+</article>

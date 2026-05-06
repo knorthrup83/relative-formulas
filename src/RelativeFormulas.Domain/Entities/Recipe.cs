@@ -9,4 +9,9 @@ public class Recipe
     public string TranscriptionText { get; set; } = string.Empty;
     public string? ImagePath { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    // Navigation properties
+    public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
+    public ICollection<RecipeTag> RecipeTags { get; set; } = new List<RecipeTag>();
+    public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 }

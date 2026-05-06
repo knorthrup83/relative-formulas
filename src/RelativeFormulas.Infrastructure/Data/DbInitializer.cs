@@ -6,6 +6,12 @@ public static class DbInitializer
 {
     public static void Seed(AppDbContext context)
     {
+        SeedRecipes(context);
+        SeedTagsAndIngredients(context);
+    }
+
+    private static void SeedRecipes(AppDbContext context)
+    {
         if (context.Recipes.Any())
             return;
 
@@ -54,6 +60,139 @@ public static class DbInitializer
         };
 
         context.Recipes.AddRange(recipes);
+        context.SaveChanges();
+    }
+
+    private static void SeedTagsAndIngredients(AppDbContext context)
+    {
+        if (context.Tags.Any())
+            return;
+
+        // Tags
+        var dessert = new Tag { Name = "Dessert" };
+        var bakedGood = new Tag { Name = "Baked Good" };
+        var savory = new Tag { Name = "Savory" };
+        var familyFavorite = new Tag { Name = "Family Favorite" };
+
+        context.Tags.AddRange(dessert, bakedGood, savory, familyFavorite);
+        context.SaveChanges();
+
+        // Shared ingredients
+        var flour = new Ingredient { Name = "All-purpose flour" };
+        var sugar = new Ingredient { Name = "Sugar" };
+        var butter = new Ingredient { Name = "Butter" };
+        var salt = new Ingredient { Name = "Salt" };
+        var eggs = new Ingredient { Name = "Eggs" };
+        var vanilla = new Ingredient { Name = "Vanilla extract" };
+        var bakingSoda = new Ingredient { Name = "Baking soda" };
+        var bakingPowder = new Ingredient { Name = "Baking powder" };
+        var brownSugar = new Ingredient { Name = "Brown sugar" };
+        var chocolateChips = new Ingredient { Name = "Chocolate chips" };
+        var bananas = new Ingredient { Name = "Ripe bananas" };
+        var cornmeal = new Ingredient { Name = "Cornmeal" };
+        var milk = new Ingredient { Name = "Milk" };
+        var vegetableOil = new Ingredient { Name = "Vegetable oil" };
+        var groundBeef = new Ingredient { Name = "Ground beef" };
+        var onion = new Ingredient { Name = "Onion" };
+        var garlic = new Ingredient { Name = "Garlic" };
+        var kidneyBeans = new Ingredient { Name = "Kidney beans" };
+        var crushedTomatoes = new Ingredient { Name = "Crushed tomatoes" };
+        var chiliPowder = new Ingredient { Name = "Chili powder" };
+        var cumin = new Ingredient { Name = "Cumin" };
+        var blackPepper = new Ingredient { Name = "Black pepper" };
+        var powderedSugar = new Ingredient { Name = "Powdered sugar" };
+        var lemonJuice = new Ingredient { Name = "Lemon juice" };
+
+        context.Ingredients.AddRange(
+            flour, sugar, butter, salt, eggs, vanilla, bakingSoda, bakingPowder,
+            brownSugar, chocolateChips, bananas, cornmeal, milk, vegetableOil,
+            groundBeef, onion, garlic, kidneyBeans, crushedTomatoes,
+            chiliPowder, cumin, blackPepper, powderedSugar, lemonJuice
+        );
+        context.SaveChanges();
+
+        // Fetch recipes by slug
+        var cookiesId = context.Recipes.Single(r => r.Slug == "grandmas-chocolate-chip-cookies").Id;
+        var bananaBreakId = context.Recipes.Single(r => r.Slug == "moms-banana-bread").Id;
+        var cornbreadId = context.Recipes.Single(r => r.Slug == "aunt-bettys-cornbread").Id;
+        var chiliId = context.Recipes.Single(r => r.Slug == "grandpas-chili").Id;
+        var lemonSquaresId = context.Recipes.Single(r => r.Slug == "nanas-lemon-squares").Id;
+
+        // RecipeTags
+        context.RecipeTags.AddRange(
+            new RecipeTag { RecipeId = cookiesId, TagId = dessert.Id },
+            new RecipeTag { RecipeId = cookiesId, TagId = bakedGood.Id },
+            new RecipeTag { RecipeId = cookiesId, TagId = familyFavorite.Id },
+            new RecipeTag { RecipeId = bananaBreakId, TagId = bakedGood.Id },
+            new RecipeTag { RecipeId = bananaBreakId, TagId = familyFavorite.Id },
+            new RecipeTag { RecipeId = cornbreadId, TagId = bakedGood.Id },
+            new RecipeTag { RecipeId = cornbreadId, TagId = savory.Id },
+            new RecipeTag { RecipeId = chiliId, TagId = savory.Id },
+            new RecipeTag { RecipeId = chiliId, TagId = familyFavorite.Id },
+            new RecipeTag { RecipeId = lemonSquaresId, TagId = dessert.Id },
+            new RecipeTag { RecipeId = lemonSquaresId, TagId = bakedGood.Id }
+        );
+
+        // RecipeIngredients — Chocolate Chip Cookies
+        context.RecipeIngredients.AddRange(
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = flour.Id, Quantity = "2 1/4", Unit = "cups" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = bakingSoda.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = salt.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = butter.Id, Quantity = "1", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = sugar.Id, Quantity = "3/4", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = brownSugar.Id, Quantity = "3/4", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = eggs.Id, Quantity = "2", Unit = "" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = vanilla.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = cookiesId, IngredientId = chocolateChips.Id, Quantity = "2", Unit = "cups" }
+        );
+
+        // RecipeIngredients — Banana Bread
+        context.RecipeIngredients.AddRange(
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = bananas.Id, Quantity = "3", Unit = "" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = butter.Id, Quantity = "1/3", Unit = "cup" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = sugar.Id, Quantity = "3/4", Unit = "cup" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = eggs.Id, Quantity = "1", Unit = "" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = vanilla.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = bakingSoda.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = salt.Id, Quantity = "1", Unit = "pinch" },
+            new RecipeIngredient { RecipeId = bananaBreakId, IngredientId = flour.Id, Quantity = "1 1/3", Unit = "cups" }
+        );
+
+        // RecipeIngredients — Cornbread
+        context.RecipeIngredients.AddRange(
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = cornmeal.Id, Quantity = "1", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = flour.Id, Quantity = "1", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = sugar.Id, Quantity = "1/4", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = bakingPowder.Id, Quantity = "1", Unit = "tbsp" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = salt.Id, Quantity = "1/2", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = milk.Id, Quantity = "1", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = vegetableOil.Id, Quantity = "1/3", Unit = "cup" },
+            new RecipeIngredient { RecipeId = cornbreadId, IngredientId = eggs.Id, Quantity = "1", Unit = "" }
+        );
+
+        // RecipeIngredients — Grandpa's Chili
+        context.RecipeIngredients.AddRange(
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = groundBeef.Id, Quantity = "2", Unit = "lbs" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = onion.Id, Quantity = "1", Unit = "large" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = garlic.Id, Quantity = "3", Unit = "cloves" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = kidneyBeans.Id, Quantity = "2", Unit = "cans" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = crushedTomatoes.Id, Quantity = "1", Unit = "can" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = chiliPowder.Id, Quantity = "2", Unit = "tbsp" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = cumin.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = salt.Id, Quantity = "1", Unit = "tsp" },
+            new RecipeIngredient { RecipeId = chiliId, IngredientId = blackPepper.Id, Quantity = "1", Unit = "tsp" }
+        );
+
+        // RecipeIngredients — Nana's Lemon Squares
+        context.RecipeIngredients.AddRange(
+            new RecipeIngredient { RecipeId = lemonSquaresId, IngredientId = butter.Id, Quantity = "1", Unit = "cup" },
+            new RecipeIngredient { RecipeId = lemonSquaresId, IngredientId = powderedSugar.Id, Quantity = "1/2", Unit = "cup" },
+            new RecipeIngredient { RecipeId = lemonSquaresId, IngredientId = flour.Id, Quantity = "2 1/4", Unit = "cups" },
+            new RecipeIngredient { RecipeId = lemonSquaresId, IngredientId = eggs.Id, Quantity = "4", Unit = "" },
+            new RecipeIngredient { RecipeId = lemonSquaresId, IngredientId = sugar.Id, Quantity = "2", Unit = "cups" },
+            new RecipeIngredient { RecipeId = lemonSquaresId, IngredientId = lemonJuice.Id, Quantity = "1/3", Unit = "cup" }
+        );
+
         context.SaveChanges();
     }
 }
