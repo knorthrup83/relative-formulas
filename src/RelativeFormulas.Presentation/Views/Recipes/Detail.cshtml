@@ -10,6 +10,8 @@
         @await Html.PartialAsync("~/Views/Shared/_TagList.cshtml", Model.RecipeTags)
     </header>
 
+    @await Html.PartialAsync("_FavoriteButton", (FavoriteButtonViewModel)ViewBag.FavoriteButton)
+
     @if (!string.IsNullOrEmpty(Model.ImagePath))
     {
         <figure>

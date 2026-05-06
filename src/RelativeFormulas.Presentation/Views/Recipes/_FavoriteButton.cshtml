@@ -1,0 +1,28 @@
+@model FavoriteButtonViewModel
+
+<div id="favorite-button">
+    @if (!Model.IsLoggedIn)
+    {
+        <a href="/login">Log in to save favorites</a>
+    }
+    else if (Model.IsFavorited)
+    {
+        <button
+            hx-post="/recipes/@Model.Slug/unfavorite"
+            hx-target="#favorite-button"
+            hx-swap="outerHTML"
+            class="outline">
+            &#9829; Favorited
+        </button>
+    }
+    else
+    {
+        <button
+            hx-post="/recipes/@Model.Slug/favorite"
+            hx-target="#favorite-button"
+            hx-swap="outerHTML"
+            class="outline">
+            &#9825; Favorite
+        </button>
+    }
+</div>

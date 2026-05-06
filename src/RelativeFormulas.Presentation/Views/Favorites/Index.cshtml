@@ -1,0 +1,22 @@
+@model List<RelativeFormulas.Domain.Entities.Recipe>
+@{
+    ViewData["Title"] = "My Favorites";
+}
+
+<header>
+    <h1>My Favorites</h1>
+</header>
+
+@if (!Model.Any())
+{
+    <p>You haven't saved any recipes yet. <a asp-controller="Recipes" asp-action="Index">Browse recipes</a></p>
+}
+else
+{
+    <div class="recipe-grid">
+        @foreach (var recipe in Model)
+        {
+            @await Html.PartialAsync("~/Views/Recipes/_RecipeCard.cshtml", recipe)
+        }
+    </div>
+}

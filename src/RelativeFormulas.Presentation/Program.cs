@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using RelativeFormulas.Application.Services;
 using RelativeFormulas.Infrastructure.Data;
@@ -6,10 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/login";
+    });
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<FavoriteService>();
 
 var app = builder.Build();
 
@@ -27,19 +37,47 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
+    name: "recipe-favorite",
+    pattern: "recipes/{slug}/favorite",
+    defaults: new { controller = "Recipes", action = "Favorite" });
+
+app.MapControllerRoute(
+    name: "recipe-unfavorite",
+    pattern: "recipes/{slug}/unfavorite",
+    defaults: new { controller = "Recipes", action = "Unfavorite" });
+
+app.MapControllerRoute(
     name: "recipe-detail",
     pattern: "recipes/{slug}",
     defaults: new { controller = "Recipes", action = "Detail" });
+
+app.MapControllerRoute(
+    name: "register",
+    pattern: "register",
+    defaults: new { controller = "Account", action = "Register" });
+
+app.MapControllerRoute(
+    name: "login",
+    pattern: "login",
+    defaults: new { controller = "Account", action = "Login" });
+
+app.MapControllerRoute(
+    name: "logout",
+    pattern: "logout",
+    defaults: new { controller = "Account", action = "Logout" });
+
+app.MapControllerRoute(
+    name: "favorites",
+    pattern: "favorites",
+    defaults: new { controller = "Favorites", action = "Index" });
 
 app.MapControllerRoute(
     name: "default",

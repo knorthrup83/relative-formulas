@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<article style="max-width: 480px; margin: 2rem auto;">
+    <header><h1>Log in</h1></header>
+
+    @if (ViewBag.Error is not null)
+    {
+        <p style="color: var(--pico-del-color);">@ViewBag.Error</p>
+    }
+
+    <form method="post" action="/login">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="returnUrl" value="@Context.Request.Query["returnUrl"]" />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
+
+        <button type="submit">Log in</button>
+    </form>
+
+    <p>Don't have an account? <a href="/register">Register</a></p>
+</article>

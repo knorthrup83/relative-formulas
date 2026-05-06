@@ -17,8 +17,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Email)
             .IsUnique();
 
+        builder.Property(u => u.DisplayName)
+            .IsRequired()
+            .HasMaxLength(100);
+
         builder.Property(u => u.PasswordHash)
             .IsRequired();
+
+        builder.Property(u => u.IsAdmin)
+            .IsRequired()
+            .HasDefaultValue(false);
 
         builder.Property(u => u.CreatedAt)
             .IsRequired();
