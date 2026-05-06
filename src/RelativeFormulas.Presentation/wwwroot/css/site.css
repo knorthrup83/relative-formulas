@@ -1,39 +1,119 @@
 /* Site-wide custom overrides for PicoCSS */
+:root {
+  --pico-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --pico-background-color: #fbf7ef;
+  --pico-color: #2f241d;
+
+  --pico-primary: #704829; /* card header text */
+  --pico-primary-hover: #F3e4c9;
+  --pico-primary-focus: rgba(139, 94, 52, 0.25);
+
+  --pico-card-background-color: #F3E4C9; /*recipe body bg*/
+  --pico-card-border-color: #eadfce;
+	--pico-card-sectioning-background-color: #BFA28C; /*recipe title bg*/
+
+  --pico-muted-color: #7a6a58;
+  --pico-muted-border-color: #eadfce;
+
+  --pico-border-radius: 0.75rem;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
+}
+
+body {
+    background-image:
+        linear-gradient(
+            rgba(251, 247, 239, 0.74),
+            rgba(251, 247, 239, 0.74)
+        ),
+        url('/images/background.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    color: #2f241d;
+}
 
 /* Recipe card grid */
-.grid article {
-    padding: 1rem;
+.recipe-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
 }
 
-.grid article h2 {
-    margin-bottom: 0.5rem;
+@media (min-width: 768px) {
+  .recipe-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.grid article h2 a {
-    text-decoration: none;
+@media (min-width: 1100px) {
+  .recipe-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-/* Recipe detail */
-article blockquote {
-    font-style: italic;
-    border-left: 3px solid var(--pico-primary);
-    padding-left: 1rem;
+/* Recipe card */
+.recipe-card h2 {
+	margin-bottom: 0.5rem;
 }
 
-article figure img {
-    max-width: 100%;
-    height: auto;
-    border-radius: var(--pico-border-radius);
+.recipe-card h2 a {
+	text-decoration: none;
+}
+
+.recipe-card footer {
+	margin-top: auto;
+}
+
+.recipe-card {
+	background: var(--pico-card-background-color);
+	border: 1px solid #eadfce;
+	border-radius: 1rem;
+	box-shadow: 0 0.75rem 2rem rgba(80, 50, 20, 0.08);
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Tag list */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block: 0.75rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #BABF94;
+  color: #704829;
+  font-size: 0.85rem;
+  text-decoration: none;
 }
 
 /* Print styles */
 @media print {
-    header nav,
-    footer {
-        display: none;
-    }
+	header nav,
+	footer {
+			display: none;
+	}
 
-    article {
-        break-inside: avoid;
-    }
+	.recipe-card {
+			break-inside: avoid;
+	}
 }
