@@ -7,6 +7,7 @@ using RelativeFormulas.Presentation.ViewModels;
 namespace RelativeFormulas.Presentation.Controllers;
 
 [Authorize(Policy = "AdminOnly")]
+[Route("admin")]
 public class AdminController : Controller
 {
     private readonly AdminService _adminService;
@@ -18,20 +19,21 @@ public class AdminController : Controller
         _env = env;
     }
 
+    [HttpGet("recipes")]
     public async Task<IActionResult> Index()
     {
         var recipes = await _adminService.GetAllRecipesAsync();
         return View(recipes);
     }
 
-    [HttpGet]
+    [HttpGet("recipes/new")]
     public async Task<IActionResult> Create()
     {
         var vm = new RecipeFormViewModel { AllTags = await _adminService.GetAllTagsAsync() };
         return View("Form", vm);
     }
 
-    [HttpPost]
+    [HttpPost("recipes")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(RecipeFormViewModel vm, IFormFile? image)
     {
@@ -43,7 +45,7 @@ public class AdminController : Controller
         return RedirectToAction("Edit", new { id });
     }
 
-    [HttpGet]
+    [HttpGet("recipes/{id:int}/edit")]
     public async Task<IActionResult> Edit(int id)
     {
         var recipe = await _adminService.GetRecipeForEditAsync(id);
@@ -52,7 +54,7 @@ public class AdminController : Controller
         return View("Form", vm);
     }
 
-    [HttpPost]
+    [HttpPost("recipes/{id:int}/edit")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, RecipeFormViewModel vm, IFormFile? image)
     {
@@ -64,7 +66,7 @@ public class AdminController : Controller
         return RedirectToAction("Edit", new { id });
     }
 
-    [HttpPost]
+    [HttpPost("recipes/{id:int}/delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
@@ -72,13 +74,13 @@ public class AdminController : Controller
         return RedirectToAction("Index");
     }
 
-    [HttpGet]
+    [HttpGet("recipes/ingredient-row")]
     public IActionResult IngredientRow(int index)
     {
         return PartialView("_IngredientRow", new IngredientRowViewModel { Index = index });
     }
 
-    [HttpGet]
+    [HttpGet("ingredients/search")]
     public async Task<IActionResult> SearchIngredients(string? q)
     {
         if (string.IsNullOrWhiteSpace(q))

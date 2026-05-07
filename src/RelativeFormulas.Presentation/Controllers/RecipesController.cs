@@ -5,6 +5,7 @@ using RelativeFormulas.Presentation.ViewModels;
 
 namespace RelativeFormulas.Presentation.Controllers;
 
+[Route("recipes")]
 public class RecipesController : Controller
 {
     private readonly RecipeService _recipeService;
@@ -16,12 +17,15 @@ public class RecipesController : Controller
         _favoriteService = favoriteService;
     }
 
+    [HttpGet("/recipes")]
+    [HttpGet("/")]
     public async Task<IActionResult> Index()
     {
         var recipes = await _recipeService.GetAllAsync();
         return View(recipes);
     }
 
+    [HttpGet("search")]
     public async Task<IActionResult> Search(string? q, string? tagSlug)
     {
         var recipes = await _recipeService.SearchAsync(q, tagSlug);
@@ -34,6 +38,7 @@ public class RecipesController : Controller
         return View(recipes);
     }
 
+    [HttpGet("{slug}")]
     public async Task<IActionResult> Detail(string slug)
     {
         if (string.IsNullOrEmpty(slug))
@@ -56,6 +61,7 @@ public class RecipesController : Controller
         return View(recipe);
     }
 
+    [HttpGet("{slug}/print")]
     public async Task<IActionResult> Print(string slug)
     {
         var recipe = await _recipeService.GetBySlugAsync(slug);
@@ -64,10 +70,10 @@ public class RecipesController : Controller
         return View(recipe);
     }
 
-    [HttpPost]
+    [HttpPost("{slug}/favorite")]
     public async Task<IActionResult> Favorite(string slug) => await HandleToggle(slug);
 
-    [HttpPost]
+    [HttpPost("{slug}/unfavorite")]
     public async Task<IActionResult> Unfavorite(string slug) => await HandleToggle(slug);
 
     private async Task<IActionResult> HandleToggle(string slug)

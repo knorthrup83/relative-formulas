@@ -16,10 +16,10 @@ public class AccountController : Controller
         _accountService = accountService;
     }
 
-    [HttpGet]
+    [HttpGet("register")]
     public IActionResult Register() => View();
 
-    [HttpPost]
+    [HttpPost("register")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(string email, string displayName, string password)
     {
@@ -41,10 +41,10 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Recipes");
     }
 
-    [HttpGet]
+    [HttpGet("login")]
     public IActionResult Login() => View();
 
-    [HttpPost]
+    [HttpPost("login")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(string email, string password, string? returnUrl)
     {
@@ -59,7 +59,7 @@ public class AccountController : Controller
         return LocalRedirect(string.IsNullOrEmpty(returnUrl) ? "/recipes" : returnUrl);
     }
 
-    [HttpPost]
+    [HttpPost("logout")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
