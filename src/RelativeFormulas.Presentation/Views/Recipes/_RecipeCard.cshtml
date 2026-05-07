@@ -1,12 +1,19 @@
 @model RelativeFormulas.Domain.Entities.Recipe
 
 <article class="recipe-card">
-    <header>
+    @{var firstImage = Model.Images.OrderBy(i => i.SortOrder).FirstOrDefault();}
+    @if (firstImage is not null)
+    {
+        <a asp-controller="Recipes" asp-action="Detail" asp-route-slug="@Model.Slug" tabindex="-1">
+            <img src="@firstImage.FilePath" alt="@Model.Title" />
+        </a>
+    }
+    <div class="recipe-card-body">
         <h2>
             <a asp-controller="Recipes" asp-action="Detail" asp-route-slug="@Model.Slug">@Model.Title</a>
         </h2>
-    </header>
-    <p>@Model.TranscriptionText[..Math.Min(150, Model.TranscriptionText.Length)]&hellip;</p>
+        <p>@Model.TranscriptionText[..Math.Min(150, Model.TranscriptionText.Length)]&hellip;</p>
+    </div>
     <footer>
         @await Html.PartialAsync("~/Views/Shared/_TagList.cshtml", Model.RecipeTags)
     </footer>

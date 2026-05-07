@@ -30,13 +30,14 @@ public class AdminService
                 .ThenInclude(ri => ri.Ingredient)
             .Include(r => r.RecipeTags)
                 .ThenInclude(rt => rt.Tag)
+            .Include(r => r.Images)
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
     public async Task<int> CreateRecipeAsync(
         string title, string slug, string? notes,
         string instructionsText, string transcriptionText,
-        string? imagePath, IEnumerable<IngredientEntry> ingredients, IEnumerable<int> tagIds)
+        IEnumerable<IngredientEntry> ingredients, IEnumerable<int> tagIds)
     {
         var recipe = new Recipe
         {
@@ -45,7 +46,6 @@ public class AdminService
             Notes = notes,
             InstructionsText = instructionsText,
             TranscriptionText = transcriptionText,
-            ImagePath = imagePath,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -62,7 +62,7 @@ public class AdminService
     public async Task UpdateRecipeAsync(
         int id, string title, string slug, string? notes,
         string instructionsText, string transcriptionText,
-        string? imagePath, IEnumerable<IngredientEntry> ingredients, IEnumerable<int> tagIds)
+        IEnumerable<IngredientEntry> ingredients, IEnumerable<int> tagIds)
     {
         var recipe = await _context.Recipes.FindAsync(id)
             ?? throw new InvalidOperationException($"Recipe {id} not found.");
@@ -72,8 +72,6 @@ public class AdminService
         recipe.Notes = notes;
         recipe.InstructionsText = instructionsText;
         recipe.TranscriptionText = transcriptionText;
-        if (imagePath is not null)
-            recipe.ImagePath = imagePath;
 
         await _context.RecipeIngredients.Where(ri => ri.RecipeId == id).ExecuteDeleteAsync();
         await _context.RecipeTags.Where(rt => rt.RecipeId == id).ExecuteDeleteAsync();
@@ -81,6 +79,35 @@ public class AdminService
         await SetIngredientsAsync(id, ingredients);
         SetTags(id, tagIds);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task AddImagesAsync(int recipeId, IEnumerable<string> filePaths)
+    {
+        var nextOrder = await _context.RecipeImages
+            .Where(i => i.RecipeId == recipeId)
+            .Select(i => (int?)i.SortOrder)
+            .MaxAsync() ?? -1;
+
+        foreach (var path in filePaths)
+        {
+            _context.RecipeImages.Add(new RecipeImage
+            {
+                RecipeId = recipeId,
+                FilePath = path,
+                SortOrder = ++nextOrder
+            });
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<string?> DeleteImageAsync(int imageId)
+    {
+        var image = await _context.RecipeImages.FindAsync(imageId);
+        if (image is null) return null;
+        _context.RecipeImages.Remove(image);
+        await _context.SaveChangesAsync();
+        return image.FilePath;
     }
 
     public async Task DeleteRecipeAsync(int id)

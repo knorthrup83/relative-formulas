@@ -68,15 +68,25 @@
     </fieldset>
 
     <fieldset>
-        <legend>Image</legend>
-        @if (!string.IsNullOrEmpty(Model.ExistingImagePath))
+        <legend>Images</legend>
+        @if (Model.ExistingImages.Any())
         {
-            <figure style="margin-bottom:0.75rem;">
-                <img src="@Model.ExistingImagePath" alt="Current recipe image" style="max-height:200px;" />
-                <figcaption>Current image — upload a new one to replace it</figcaption>
-            </figure>
+            <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+                @foreach (var img in Model.ExistingImages)
+                {
+                    <figure style="margin:0; text-align:center;">
+                        <img src="@img.FilePath" alt="" style="max-height:160px; max-width:200px; display:block; border:1px solid #ddd5cc; border-radius:4px;" />
+                        <form method="post" action="/admin/recipes/@Model.Id/images/@img.Id/delete" style="margin-top:0.4rem;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="outline secondary" style="font-size:0.75rem; padding:0.2rem 0.5rem;"
+                                onclick="return confirm('Remove this image?')">Remove</button>
+                        </form>
+                    </figure>
+                }
+            </div>
         }
-        <input type="file" name="image" accept="image/*" />
+        <label for="images">Add images <small>(you can select multiple files)</small></label>
+        <input type="file" id="images" name="images" accept="image/*" multiple />
     </fieldset>
 
     <button type="submit">@(isEdit ? "Save changes" : "Create recipe")</button>

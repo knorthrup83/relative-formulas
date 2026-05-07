@@ -27,9 +27,6 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
         builder.Property(r => r.TranscriptionText)
             .IsRequired();
 
-        builder.Property(r => r.ImagePath)
-            .HasMaxLength(500);
-
         builder.Property(r => r.CreatedAt)
             .IsRequired();
     }

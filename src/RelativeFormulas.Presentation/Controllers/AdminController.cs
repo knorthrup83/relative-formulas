@@ -35,13 +35,14 @@ public class AdminController : Controller
 
     [HttpPost("recipes")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(RecipeFormViewModel vm, IFormFile? image)
+    public async Task<IActionResult> Create(RecipeFormViewModel vm, IFormFileCollection? images)
     {
-        var imagePath = await SaveImageAsync(image);
         var id = await _adminService.CreateRecipeAsync(
             vm.Title, vm.Slug, vm.Notes,
             vm.InstructionsText, vm.TranscriptionText,
-            imagePath, ToEntries(vm.Ingredients), vm.SelectedTagIds);
+            ToEntries(vm.Ingredients), vm.SelectedTagIds);
+        var paths = await SaveImagesAsync(images);
+        if (paths.Any()) await _adminService.AddImagesAsync(id, paths);
         return RedirectToAction("Edit", new { id });
     }
 
@@ -56,13 +57,14 @@ public class AdminController : Controller
 
     [HttpPost("recipes/{id:int}/edit")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, RecipeFormViewModel vm, IFormFile? image)
+    public async Task<IActionResult> Edit(int id, RecipeFormViewModel vm, IFormFileCollection? images)
     {
-        var imagePath = await SaveImageAsync(image);
         await _adminService.UpdateRecipeAsync(
             id, vm.Title, vm.Slug, vm.Notes,
             vm.InstructionsText, vm.TranscriptionText,
-            imagePath, ToEntries(vm.Ingredients), vm.SelectedTagIds);
+            ToEntries(vm.Ingredients), vm.SelectedTagIds);
+        var paths = await SaveImagesAsync(images);
+        if (paths.Any()) await _adminService.AddImagesAsync(id, paths);
         return RedirectToAction("Edit", new { id });
     }
 
@@ -72,6 +74,20 @@ public class AdminController : Controller
     {
         await _adminService.DeleteRecipeAsync(id);
         return RedirectToAction("Index");
+    }
+
+    [HttpPost("recipes/{id:int}/images/{imageId:int}/delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteImage(int id, int imageId)
+    {
+        var filePath = await _adminService.DeleteImageAsync(imageId);
+        if (filePath is not null)
+        {
+            var fullPath = Path.Combine(_env.WebRootPath, filePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+            if (System.IO.File.Exists(fullPath))
+                System.IO.File.Delete(fullPath);
+        }
+        return RedirectToAction("Edit", new { id });
     }
 
     [HttpGet("recipes/ingredient-row")]
@@ -89,17 +105,22 @@ public class AdminController : Controller
         return PartialView("~/Views/Admin/Ingredients/_SearchResults.cshtml", results);
     }
 
-    private async Task<string?> SaveImageAsync(IFormFile? image)
+    private async Task<List<string>> SaveImagesAsync(IFormFileCollection? images)
     {
-        if (image is null || image.Length == 0) return null;
+        var paths = new List<string>();
+        if (images is null) return paths;
         var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
         Directory.CreateDirectory(uploadsDir);
-        var ext = Path.GetExtension(image.FileName);
-        var filename = $"{Guid.NewGuid()}{ext}";
-        var path = Path.Combine(uploadsDir, filename);
-        await using var stream = new FileStream(path, FileMode.Create);
-        await image.CopyToAsync(stream);
-        return $"/uploads/{filename}";
+        foreach (var image in images.Where(f => f.Length > 0))
+        {
+            var ext = Path.GetExtension(image.FileName);
+            var filename = $"{Guid.NewGuid()}{ext}";
+            var fullPath = Path.Combine(uploadsDir, filename);
+            await using var stream = new FileStream(fullPath, FileMode.Create);
+            await image.CopyToAsync(stream);
+            paths.Add($"/uploads/{filename}");
+        }
+        return paths;
     }
 
     private static IEnumerable<AdminService.IngredientEntry> ToEntries(List<IngredientRowViewModel> rows) =>

@@ -15,7 +15,7 @@ public class RecipeFormViewModel
 
     // Populated before rendering the form view
     public List<Tag> AllTags { get; set; } = [];
-    public string? ExistingImagePath { get; set; }
+    public List<RecipeImageViewModel> ExistingImages { get; set; } = [];
 
     public static RecipeFormViewModel FromRecipe(Recipe recipe, List<Tag> allTags) => new()
     {
@@ -25,7 +25,15 @@ public class RecipeFormViewModel
         Notes = recipe.Notes ?? "",
         InstructionsText = recipe.InstructionsText,
         TranscriptionText = recipe.TranscriptionText,
-        ExistingImagePath = recipe.ImagePath,
+        ExistingImages = recipe.Images
+            .OrderBy(i => i.SortOrder)
+            .Select(i => new RecipeImageViewModel
+            {
+                Id = i.Id,
+                FilePath = i.FilePath,
+                Caption = i.Caption,
+                SortOrder = i.SortOrder
+            }).ToList(),
         SelectedTagIds = recipe.RecipeTags.Select(rt => rt.TagId).ToList(),
         AllTags = allTags,
         Ingredients = recipe.RecipeIngredients

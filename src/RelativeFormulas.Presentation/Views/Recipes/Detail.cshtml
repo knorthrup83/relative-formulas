@@ -12,12 +12,20 @@
 
     @await Html.PartialAsync("_FavoriteButton", (FavoriteButtonViewModel)ViewBag.FavoriteButton)
 
-    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    @if (Model.Images.Any())
     {
-        <figure>
-            <img src="@Model.ImagePath" alt="Original recipe card for @Model.Title" />
-            <figcaption>Original recipe card</figcaption>
-        </figure>
+        <div class="recipe-image-gallery">
+            @foreach (var image in Model.Images.OrderBy(i => i.SortOrder))
+            {
+                <figure>
+                    <img src="@image.FilePath" alt="Recipe card for @Model.Title" />
+                    @if (!string.IsNullOrEmpty(image.Caption))
+                    {
+                        <figcaption>@image.Caption</figcaption>
+                    }
+                </figure>
+            }
+        </div>
     }
 
     @if (Model.RecipeIngredients.Any())

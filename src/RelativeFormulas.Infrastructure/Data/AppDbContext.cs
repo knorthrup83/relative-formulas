@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
     public DbSet<RecipeTag> RecipeTags => Set<RecipeTag>();
     public DbSet<Favorite> Favorites => Set<Favorite>();
+    public DbSet<RecipeImage> RecipeImages => Set<RecipeImage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

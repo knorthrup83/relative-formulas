@@ -68,15 +68,8 @@
     </fieldset>
 
     <fieldset>
-        <legend>Image</legend>
-        @if (!string.IsNullOrEmpty(Model.ExistingImagePath))
-        {
-            <figure style="margin-bottom:0.75rem;">
-                <img src="@Model.ExistingImagePath" alt="Current recipe image" style="max-height:200px;" />
-                <figcaption>Current image — upload a new one to replace it</figcaption>
-            </figure>
-        }
-        <input type="file" name="image" accept="image/*" />
+        <legend>Images</legend>
+        <input type="file" id="images" name="images" accept="image/*" multiple />
     </fieldset>
 
     <button type="submit">@(isEdit ? "Save changes" : "Create recipe")</button>

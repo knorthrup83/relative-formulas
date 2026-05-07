@@ -18,6 +18,7 @@ public class RecipeService
         return await _context.Recipes
             .Include(r => r.RecipeTags)
                 .ThenInclude(rt => rt.Tag)
+            .Include(r => r.Images)
             .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
     }
@@ -29,6 +30,7 @@ public class RecipeService
                 .ThenInclude(rt => rt.Tag)
             .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
+            .Include(r => r.Images)
             .FirstOrDefaultAsync(r => r.Slug == slug);
     }
 
@@ -39,6 +41,7 @@ public class RecipeService
                 .ThenInclude(rt => rt.Tag)
             .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
+            .Include(r => r.Images)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(tagSlug))
