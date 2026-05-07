@@ -3,6 +3,6 @@
 <div class="tag-list">
     @foreach (var rt in Model)
     {
-        <span class="tag">@rt.Tag.Name</span>
+        <a href="/tags/@rt.Tag.Slug" class="tag">@rt.Tag.Name</a>
     }
 </div>

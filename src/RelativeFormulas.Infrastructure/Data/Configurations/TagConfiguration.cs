@@ -14,6 +14,13 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.Property(t => t.Slug)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.HasIndex(t => t.Slug)
+            .IsUnique();
+
         builder.HasMany(t => t.RecipeTags)
             .WithOne(rt => rt.Tag)
             .HasForeignKey(rt => rt.TagId)

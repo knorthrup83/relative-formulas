@@ -1,0 +1,22 @@
+@model List<RelativeFormulas.Domain.Entities.Tag>
+@{
+    ViewData["Title"] = "Tags";
+}
+
+<header>
+    <h1>Tags</h1>
+</header>
+
+@if (!Model.Any())
+{
+    <p class="empty-state">No tags yet.</p>
+}
+else
+{
+    <div class="tag-list" style="font-size:1.1rem;">
+        @foreach (var tag in Model)
+        {
+            <a href="/tags/@tag.Slug" class="tag">@tag.Name</a>
+        }
+    </div>
+}

@@ -3,16 +3,22 @@
     ViewData["Title"] = "Recipes";
 }
 
-@if (!Model.Any())
-{
-    <p>No recipes yet.</p>
-}
-else
-{
-    <div class="recipe-grid">
-        @foreach (var recipe in Model)
-        {
-            @await Html.PartialAsync("_RecipeCard", recipe)
-        }
-    </div>
-}
+<header style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+    <h1 style="margin:0;">Recipes</h1>
+    <input type="search"
+        name="q"
+        placeholder="Search recipes…"
+        autocomplete="off"
+        style="max-width:280px; margin:0;"
+        hx-get="/recipes/search"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#recipe-results"
+        hx-swap="innerHTML"
+        hx-indicator="#search-spinner" />
+</header>
+
+<span id="search-spinner" class="htmx-indicator" aria-live="polite">Searching…</span>
+
+<div id="recipe-results">
+    @await Html.PartialAsync("_RecipeList", Model)
+</div>

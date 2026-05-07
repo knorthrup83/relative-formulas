@@ -1,0 +1,33 @@
+@model List<RelativeFormulas.Domain.Entities.Recipe>
+@{
+    var q = ViewBag.Query as string;
+    ViewData["Title"] = string.IsNullOrEmpty(q) ? "Search" : $"Search: {q}";
+}
+
+<header style="margin-bottom:1rem;">
+    <h1>Search</h1>
+    <form method="get" action="/recipes/search" style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+        <input type="search"
+            name="q"
+            value="@q"
+            placeholder="Search recipes…"
+            autocomplete="off"
+            style="max-width:320px; margin:0;"
+            hx-get="/recipes/search"
+            hx-trigger="keyup changed delay:300ms"
+            hx-target="#recipe-results"
+            hx-swap="innerHTML"
+            hx-indicator="#search-spinner" />
+        <button type="submit" style="margin:0;">Search</button>
+    </form>
+    <span id="search-spinner" class="htmx-indicator" aria-live="polite">Searching…</span>
+</header>
+
+@if (!string.IsNullOrEmpty(q))
+{
+    <p class="muted">@Model.Count result@(Model.Count == 1 ? "" : "s") for &ldquo;@q&rdquo;</p>
+}
+
+<div id="recipe-results">
+    @await Html.PartialAsync("_RecipeList", Model)
+</div>

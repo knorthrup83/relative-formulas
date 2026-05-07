@@ -69,10 +69,10 @@ public static class DbInitializer
             return;
 
         // Tags
-        var dessert = new Tag { Name = "Dessert" };
-        var bakedGood = new Tag { Name = "Baked Good" };
-        var savory = new Tag { Name = "Savory" };
-        var familyFavorite = new Tag { Name = "Family Favorite" };
+        var dessert = new Tag { Name = "Dessert", Slug = "dessert" };
+        var bakedGood = new Tag { Name = "Baked Good", Slug = "baked-good" };
+        var savory = new Tag { Name = "Savory", Slug = "savory" };
+        var familyFavorite = new Tag { Name = "Family Favorite", Slug = "family-favorite" };
 
         context.Tags.AddRange(dessert, bakedGood, savory, familyFavorite);
         context.SaveChanges();

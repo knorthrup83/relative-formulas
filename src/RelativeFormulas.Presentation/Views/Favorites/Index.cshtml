@@ -9,14 +9,9 @@
 
 @if (!Model.Any())
 {
-    <p>You haven't saved any recipes yet. <a asp-controller="Recipes" asp-action="Index">Browse recipes</a></p>
+    <p class="empty-state">You haven't saved any recipes yet. <a asp-controller="Recipes" asp-action="Index">Browse recipes</a></p>
 }
 else
 {
-    <div class="recipe-grid">
-        @foreach (var recipe in Model)
-        {
-            @await Html.PartialAsync("~/Views/Recipes/_RecipeCard.cshtml", recipe)
-        }
-    </div>
+    @await Html.PartialAsync("~/Views/Recipes/_RecipeList.cshtml", Model)
 }

@@ -1,0 +1,12 @@
+@model List<RelativeFormulas.Domain.Entities.Recipe>
+@{
+    var tag = ViewBag.Tag as RelativeFormulas.Domain.Entities.Tag;
+    ViewData["Title"] = tag?.Name ?? "Tag";
+}
+
+<header style="margin-bottom:1rem;">
+    <h1>@tag?.Name</h1>
+    <a href="/tags">&larr; All tags</a>
+</header>
+
+@await Html.PartialAsync("~/Views/Recipes/_RecipeList.cshtml", Model)

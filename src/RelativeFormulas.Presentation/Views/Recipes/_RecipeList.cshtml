@@ -1,0 +1,15 @@
+@model List<RelativeFormulas.Domain.Entities.Recipe>
+
+@if (!Model.Any())
+{
+    <p class="empty-state">No recipes found.</p>
+}
+else
+{
+    <div class="recipe-grid">
+        @foreach (var recipe in Model)
+        {
+            @await Html.PartialAsync("~/Views/Recipes/_RecipeCard.cshtml", recipe)
+        }
+    </div>
+}

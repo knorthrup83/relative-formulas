@@ -22,6 +22,18 @@ public class RecipesController : Controller
         return View(recipes);
     }
 
+    public async Task<IActionResult> Search(string? q, string? tagSlug)
+    {
+        var recipes = await _recipeService.SearchAsync(q, tagSlug);
+        ViewBag.Query = q;
+        ViewBag.TagSlug = tagSlug;
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+            return PartialView("_RecipeList", recipes);
+
+        return View(recipes);
+    }
+
     public async Task<IActionResult> Detail(string slug)
     {
         if (string.IsNullOrEmpty(slug))

@@ -82,6 +82,21 @@ app.MapControllerRoute(
     defaults: new { controller = "Admin", action = "Index" });
 
 app.MapControllerRoute(
+    name: "recipe-search",
+    pattern: "recipes/search",
+    defaults: new { controller = "Recipes", action = "Search" });
+
+app.MapControllerRoute(
+    name: "tags-detail",
+    pattern: "tags/{slug}",
+    defaults: new { controller = "Tags", action = "Detail" });
+
+app.MapControllerRoute(
+    name: "tags",
+    pattern: "tags",
+    defaults: new { controller = "Tags", action = "Index" });
+
+app.MapControllerRoute(
     name: "recipe-favorite",
     pattern: "recipes/{slug}/favorite",
     defaults: new { controller = "Recipes", action = "Favorite" });
