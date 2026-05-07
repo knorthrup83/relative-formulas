@@ -18,6 +18,13 @@ public class RecipeIngredientConfiguration : IEntityTypeConfiguration<RecipeIngr
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.Property(ri => ri.PreparationNote)
+            .HasMaxLength(200);
+
+        builder.Property(ri => ri.SortOrder)
+            .IsRequired()
+            .HasDefaultValue(0);
+
         builder.HasOne(ri => ri.Recipe)
             .WithMany(r => r.RecipeIngredients)
             .HasForeignKey(ri => ri.RecipeId)

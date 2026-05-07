@@ -1,0 +1,48 @@
+@model List<RelativeFormulas.Domain.Entities.Recipe>
+@{
+    ViewData["Title"] = "Admin – Recipes";
+}
+
+<header style="display:flex; justify-content:space-between; align-items:center;">
+    <h1>Recipes</h1>
+    <a href="/admin/recipes/new" role="button">+ New recipe</a>
+</header>
+
+@if (!Model.Any())
+{
+    <p>No recipes yet.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Slug</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recipe in Model)
+            {
+                <tr>
+                    <td><a href="/recipes/@recipe.Slug">@recipe.Title</a></td>
+                    <td><code>@recipe.Slug</code></td>
+                    <td>@recipe.CreatedAt.ToString("MMM d, yyyy")</td>
+                    <td style="white-space:nowrap;">
+                        <a href="/admin/recipes/@recipe.Id/edit">Edit</a>
+                        &nbsp;
+                        <form method="post" action="/admin/recipes/@recipe.Id/delete" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="outline secondary"
+                                onclick="return confirm('Delete @Html.Raw(recipe.Title.Replace("'", "\\'"))?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

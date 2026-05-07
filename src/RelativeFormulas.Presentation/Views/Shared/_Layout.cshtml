@@ -17,6 +17,10 @@
                 <li><a asp-controller="Recipes" asp-action="Index">Recipes</a></li>
                 @if (User.Identity?.IsAuthenticated == true)
                 {
+                    @if (User.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value == "True")
+                    {
+                        <li><a href="/admin/recipes">Admin</a></li>
+                    }
                     <li><a href="/favorites">Favorites</a></li>
                     <li><span>@User.Identity.Name</span></li>
                     <li>

@@ -1,0 +1,15 @@
+@model List<RelativeFormulas.Domain.Entities.Ingredient>
+
+@foreach (var ingredient in Model)
+{
+    <li class="suggestion-item"
+        data-name="@ingredient.Name"
+        onclick="
+            var row = this.closest('.ingredient-row');
+            row.querySelector('[name*=IngredientName]').value = this.dataset.name;
+            this.closest('ul').innerHTML = '';
+        "
+        style="cursor:pointer; padding:0.25rem 0.5rem; list-style:none;">
+        @ingredient.Name
+    </li>
+}

@@ -1,0 +1,95 @@
+@model RecipeFormViewModel
+@{
+    var isEdit = Model.Id.HasValue;
+    ViewData["Title"] = isEdit ? $"Edit – {Model.Title}" : "New Recipe";
+    var formAction = isEdit ? $"/admin/recipes/{Model.Id}/edit" : "/admin/recipes";
+}
+
+<header>
+    <h1>@(isEdit ? "Edit Recipe" : "New Recipe")</h1>
+    @if (isEdit)
+    {
+        <a href="/recipes/@Model.Slug">View on site &rarr;</a>
+    }
+</header>
+
+<form method="post" action="@formAction" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <label for="Title">Title</label>
+    <input type="text" id="Title" name="Title" value="@Model.Title" required />
+
+    <label for="Slug">Slug <small>(leave blank to auto-generate)</small></label>
+    <input type="text" id="Slug" name="Slug" value="@Model.Slug" placeholder="e.g. grandmas-cookies" />
+
+    <label for="Notes">Notes</label>
+    <textarea id="Notes" name="Notes" rows="3">@Model.Notes</textarea>
+
+    <label for="InstructionsText">Instructions</label>
+    <textarea id="InstructionsText" name="InstructionsText" rows="6">@Model.InstructionsText</textarea>
+
+    <label for="TranscriptionText">Transcription</label>
+    <textarea id="TranscriptionText" name="TranscriptionText" rows="6">@Model.TranscriptionText</textarea>
+
+    <fieldset>
+        <legend>Tags</legend>
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+            @foreach (var tag in Model.AllTags)
+            {
+                <label style="display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
+                    <input type="checkbox"
+                        name="SelectedTagIds"
+                        value="@tag.Id"
+                        @(Model.SelectedTagIds.Contains(tag.Id) ? "checked" : "") />
+                    @tag.Name
+                </label>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Ingredients</legend>
+        <div id="ingredient-rows">
+            @foreach (var ingredient in Model.Ingredients)
+            {
+                @await Html.PartialAsync("_IngredientRow", ingredient)
+            }
+        </div>
+        <input type="hidden" id="ingredientIndex" name="index" value="@Model.Ingredients.Count" />
+        <button type="button"
+            hx-get="/admin/recipes/ingredient-row"
+            hx-target="#ingredient-rows"
+            hx-swap="beforeend"
+            hx-include="#ingredientIndex"
+            class="outline"
+            style="margin-top:0.5rem;">
+            + Add ingredient
+        </button>
+    </fieldset>
+
+    <fieldset>
+        <legend>Image</legend>
+        @if (!string.IsNullOrEmpty(Model.ExistingImagePath))
+        {
+            <figure style="margin-bottom:0.75rem;">
+                <img src="@Model.ExistingImagePath" alt="Current recipe image" style="max-height:200px;" />
+                <figcaption>Current image — upload a new one to replace it</figcaption>
+            </figure>
+        }
+        <input type="file" name="image" accept="image/*" />
+    </fieldset>
+
+    <button type="submit">@(isEdit ? "Save changes" : "Create recipe")</button>
+    <a href="/admin/recipes" class="outline secondary" style="margin-left:1rem;">Cancel</a>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('htmx:afterRequest', function (e) {
+            if (e.detail.requestConfig?.path?.includes('ingredient-row')) {
+                var idx = document.getElementById('ingredientIndex');
+                idx.value = parseInt(idx.value) + 1;
+            }
+        });
+    </script>
+}

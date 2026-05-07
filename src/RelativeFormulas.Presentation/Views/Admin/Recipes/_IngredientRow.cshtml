@@ -1,0 +1,48 @@
+@model IngredientRowViewModel
+
+<div class="ingredient-row" style="display:flex; gap:0.5rem; align-items:flex-start; margin-bottom:0.5rem; flex-wrap:wrap;">
+    <input type="hidden" name="Ingredients[@Model.Index].IngredientId" value="@Model.IngredientId" />
+    <input type="hidden" name="Ingredients[@Model.Index].SortOrder" value="@Model.Index" />
+
+    <div style="flex:3; min-width:160px; position:relative;">
+        <input type="text"
+            id="ing-name-@Model.Index"
+            name="Ingredients[@Model.Index].IngredientName"
+            value="@Model.IngredientName"
+            placeholder="Ingredient"
+            autocomplete="off"
+            style="margin-bottom:0;"
+            hx-get="/admin/ingredients/search"
+            hx-trigger="keyup changed delay:250ms"
+            hx-target="#ing-suggestions-@Model.Index"
+            hx-swap="innerHTML"
+            hx-params="none"
+            hx-vals="js:{q: this.value}" />
+        <ul id="ing-suggestions-@Model.Index" class="ingredient-suggestions"></ul>
+    </div>
+
+    <input type="text"
+        name="Ingredients[@Model.Index].Quantity"
+        value="@Model.Quantity"
+        placeholder="Qty"
+        style="flex:1; min-width:60px; margin-bottom:0;" />
+
+    <input type="text"
+        name="Ingredients[@Model.Index].Unit"
+        value="@Model.Unit"
+        placeholder="Unit"
+        style="flex:1; min-width:70px; margin-bottom:0;" />
+
+    <input type="text"
+        name="Ingredients[@Model.Index].PreparationNote"
+        value="@Model.PreparationNote"
+        placeholder="Prep note (optional)"
+        style="flex:2; min-width:120px; margin-bottom:0;" />
+
+    <button type="button"
+        onclick="this.closest('.ingredient-row').remove()"
+        class="outline secondary"
+        style="flex:none; margin-bottom:0;">
+        ✕
+    </button>
+</div>

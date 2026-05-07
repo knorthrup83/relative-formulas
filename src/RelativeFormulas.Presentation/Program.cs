@@ -17,9 +17,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireClaim("isAdmin", "True"));
+});
+
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<FavoriteService>();
+builder.Services.AddScoped<AdminService>();
 
 var app = builder.Build();
 
@@ -43,6 +50,36 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapControllerRoute(
+    name: "admin-ingredient-search",
+    pattern: "admin/ingredients/search",
+    defaults: new { controller = "Admin", action = "SearchIngredients" });
+
+app.MapControllerRoute(
+    name: "admin-ingredient-row",
+    pattern: "admin/recipes/ingredient-row",
+    defaults: new { controller = "Admin", action = "IngredientRow" });
+
+app.MapControllerRoute(
+    name: "admin-recipe-new",
+    pattern: "admin/recipes/new",
+    defaults: new { controller = "Admin", action = "Create" });
+
+app.MapControllerRoute(
+    name: "admin-recipe-edit",
+    pattern: "admin/recipes/{id:int}/edit",
+    defaults: new { controller = "Admin", action = "Edit" });
+
+app.MapControllerRoute(
+    name: "admin-recipe-delete",
+    pattern: "admin/recipes/{id:int}/delete",
+    defaults: new { controller = "Admin", action = "Delete" });
+
+app.MapControllerRoute(
+    name: "admin-recipes",
+    pattern: "admin/recipes",
+    defaults: new { controller = "Admin", action = "Index" });
 
 app.MapControllerRoute(
     name: "recipe-favorite",

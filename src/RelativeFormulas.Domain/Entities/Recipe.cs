@@ -8,6 +8,7 @@ public class Recipe
     public string InstructionsText { get; set; } = string.Empty;
     public string TranscriptionText { get; set; } = string.Empty;
     public string? ImagePath { get; set; }
+    public string? Notes { get; set; }
     public DateTime CreatedAt { get; set; }
 
     // Navigation properties

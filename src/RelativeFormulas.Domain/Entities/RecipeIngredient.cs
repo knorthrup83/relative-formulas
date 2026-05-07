@@ -7,6 +7,8 @@ public class RecipeIngredient
     public int IngredientId { get; set; }
     public string Quantity { get; set; } = string.Empty;
     public string Unit { get; set; } = string.Empty;
+    public string? PreparationNote { get; set; }
+    public int SortOrder { get; set; }
 
     // Navigation properties
     public Recipe Recipe { get; set; } = null!;
