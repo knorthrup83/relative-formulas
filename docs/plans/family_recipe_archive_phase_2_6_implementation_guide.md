@@ -878,17 +878,93 @@ The project can be considered archive-ready when:
 
 ---
 
-# Notes for Future Enhancements
+# Phase 7 – Future Enhancements
 
-Do not build these until the MVP is complete:
-- Unit conversion
-- Recipe scaling
-- OCR-assisted transcription
-- Family comments
-- “Made this” notes
-- Recipe collections
-- PDF export
-- Advanced image editing
+## Goal
+Extend the archive with features that improve usability and family engagement after the MVP is stable and all recipes are entered.
 
-These are good ideas, but not required for the first durable version.
+Do not start Phase 7 until the MVP is complete and the recipe archive content is in good shape.
+
+---
+
+## 7.1 Recipe Scaling
+
+Allow users to multiply ingredient quantities by a factor (e.g. 2x, 3x, 0.5x).
+
+- Add a scaling control on the recipe detail page
+- Multiply numeric portions of Quantity values client-side (JavaScript)
+- No database changes required
+- Handle fractions gracefully (e.g. “2 1/4” × 2 = “4 1/2”)
+
+---
+
+## 7.2 Unit Conversion
+
+Allow users to toggle between US customary and metric units.
+
+- Maintain a conversion table for common units (cups → ml, oz → g, °F → °C, etc.)
+- Apply conversions client-side on the detail page
+- Ingredients with non-convertible units (e.g. “pinch”, “cloves”) display as-is
+
+---
+
+## 7.3 Family Comments
+
+Allow family members to leave notes on a recipe.
+
+- New `Comment` entity: RecipeId, UserId, Body, CreatedAt
+- Comments visible on the recipe detail page
+- Post comment form for logged-in users only
+- No moderation needed for a private family archive
+
+---
+
+## 7.4 “Made This” Log
+
+Allow users to record when they cooked a recipe and any notes about that session.
+
+- New `CookLog` entity: RecipeId, UserId, CookedAt, Notes
+- Displayed as a personal history on the recipe detail page
+- Optional: show count of how many times the family has made a recipe
+
+---
+
+## 7.5 Recipe Collections
+
+Allow recipes to be grouped into named sets (e.g. “Holiday Baking”, “Dad's Grilling”).
+
+- New `Collection` entity: Name, Slug, Description, UserId (owner)
+- New `CollectionRecipe` join entity
+- Collection pages at `/collections/{slug}`
+- Admin or any logged-in user can create collections (decide on policy)
+
+---
+
+## 7.6 PDF Export
+
+Generate a downloadable PDF of a recipe or a full collection.
+
+- Use a server-side PDF library (e.g. QuestPDF or PuppeteerSharp)
+- Reuse the print view as the source layout
+- Route: `GET /recipes/{slug}/pdf`
+
+---
+
+## 7.7 OCR-Assisted Transcription
+
+Automatically extract text from uploaded recipe card images to pre-fill the transcription field.
+
+- Integrate an OCR library or API (e.g. Tesseract.NET, Azure Computer Vision)
+- Run on image upload in the admin form
+- Present extracted text as a suggestion, not an automatic replacement
+
+---
+
+## 7.8 Advanced Image Editing
+
+Allow basic in-browser adjustments to scanned card images (crop, rotate, brightness).
+
+- Use a JavaScript image editor library (e.g. Cropper.js)
+- Apply adjustments before upload in the admin form
+- Save the processed image, keep the original as an archival copy
 

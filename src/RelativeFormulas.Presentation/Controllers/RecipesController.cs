@@ -56,6 +56,14 @@ public class RecipesController : Controller
         return View(recipe);
     }
 
+    public async Task<IActionResult> Print(string slug)
+    {
+        var recipe = await _recipeService.GetBySlugAsync(slug);
+        if (recipe is null)
+            return NotFound();
+        return View(recipe);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Favorite(string slug) => await HandleToggle(slug);
 

@@ -82,6 +82,11 @@ app.MapControllerRoute(
     defaults: new { controller = "Admin", action = "Index" });
 
 app.MapControllerRoute(
+    name: "recipe-print",
+    pattern: "recipes/{slug}/print",
+    defaults: new { controller = "Recipes", action = "Print" });
+
+app.MapControllerRoute(
     name: "recipe-search",
     pattern: "recipes/search",
     defaults: new { controller = "Recipes", action = "Search" });

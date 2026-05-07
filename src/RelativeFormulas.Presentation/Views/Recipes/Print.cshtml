@@ -1,0 +1,73 @@
+@model RelativeFormulas.Domain.Entities.Recipe
+@{
+    ViewData["Title"] = $"Print – {Model.Title}";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.Title – Northrup Family Recipe Archive</title>
+    <link rel="stylesheet" href="/css/print.css" />
+</head>
+<body>
+    <h1>@Model.Title</h1>
+    <p class="meta">Added @Model.CreatedAt.ToString("MMMM d, yyyy")</p>
+
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <figure>
+            <img src="@Model.ImagePath" alt="Original recipe card for @Model.Title" />
+            <figcaption>Original recipe card</figcaption>
+        </figure>
+    }
+
+    @if (Model.RecipeIngredients.Any())
+    {
+        <section>
+            <h2>Ingredients</h2>
+            <ul>
+                @foreach (var ri in Model.RecipeIngredients.OrderBy(ri => ri.SortOrder))
+                {
+                    <li>
+                        @ri.Quantity
+                        @if (!string.IsNullOrEmpty(ri.Unit)) { <span>@ri.Unit</span> }
+                        @ri.Ingredient.Name
+                        @if (!string.IsNullOrEmpty(ri.PreparationNote)) { <em>(@ri.PreparationNote)</em> }
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.InstructionsText))
+    {
+        <section>
+            <h2>Instructions</h2>
+            <p>@Model.InstructionsText</p>
+        </section>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.TranscriptionText))
+    {
+        <section>
+            <h2>Original Transcription</h2>
+            <blockquote>@Model.TranscriptionText</blockquote>
+        </section>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.Notes))
+    {
+        <section>
+            <h2>Notes</h2>
+            <p>@Model.Notes</p>
+        </section>
+    }
+
+    <script>
+        window.onload = function () { window.print(); };
+        window.addEventListener('afterprint', function () { window.close(); });
+    </script>
+</body>
+</html>

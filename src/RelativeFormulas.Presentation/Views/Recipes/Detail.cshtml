@@ -52,3 +52,7 @@
 </article>
 
 <a asp-action="Index">&larr; Back to all recipes</a>
+<a href="/recipes/@Model.Slug/print"
+   class="no-print"
+   style="margin-left:1rem;"
+   onclick="window.open(this.href,'_blank','width=900,height=700'); return false;">Print</a>
