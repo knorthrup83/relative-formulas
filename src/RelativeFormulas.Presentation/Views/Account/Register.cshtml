@@ -2,12 +2,12 @@
     ViewData["Title"] = "Register";
 }
 
-<article style="max-width: 480px; margin: 2rem auto;">
+<div class="card" style="max-width: 480px; margin: 2rem auto;">
     <header><h1>Create an account</h1></header>
 
     @if (ViewBag.Error is not null)
     {
-        <p style="color: var(--pico-del-color);">@ViewBag.Error</p>
+        <p class="error">@ViewBag.Error</p>
     }
 
     <form method="post" action="/register">
@@ -26,4 +26,4 @@
     </form>
 
     <p>Already have an account? <a href="/login">Log in</a></p>
-</article>
+</div>

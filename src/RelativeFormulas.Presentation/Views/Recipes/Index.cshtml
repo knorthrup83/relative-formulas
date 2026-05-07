@@ -3,21 +3,7 @@
     ViewData["Title"] = "Recipes";
 }
 
-<header style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
-    <h1 style="margin:0;">Recipes</h1>
-    <input type="search"
-        name="q"
-        placeholder="Search recipes…"
-        autocomplete="off"
-        style="max-width:280px; margin:0;"
-        hx-get="/recipes/search"
-        hx-trigger="keyup changed delay:300ms"
-        hx-target="#recipe-results"
-        hx-swap="innerHTML"
-        hx-indicator="#search-spinner" />
-</header>
-
-<span id="search-spinner" class="htmx-indicator" aria-live="polite">Searching…</span>
+<h1>Recipes</h1>
 
 <div id="recipe-results">
     @await Html.PartialAsync("_RecipeList", Model)

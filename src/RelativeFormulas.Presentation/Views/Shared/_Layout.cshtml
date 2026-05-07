@@ -7,16 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,300;0,400;0,700;1,400&family=Rubik:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@3/modern-normalize.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="container">
-        <nav>
+    <header class="site-header">
+        <nav class="rf-wrap">
             <ul>
                 <li><a href="/" aria-label="Home"><strong>Northrup Family Recipe Archive</strong></a></li>
             </ul>
             <ul>
+                <li>
+                    <form method="get" action="/recipes/search" style="margin:0;">
+                        <input type="search"
+                            name="q"
+                            placeholder="Search recipes…"
+                            autocomplete="off"
+                            class="nav-search" />
+                    </form>
+                </li>
                 <li><a asp-controller="Recipes" asp-action="Index">Recipes</a></li>
                 <li><a href="/tags">Tags</a></li>
                 @if (User.Identity?.IsAuthenticated == true)
@@ -43,12 +52,14 @@
         </nav>
     </header>
 
-    <main class="container">
+    <main class="rf-wrap">
         @RenderBody()
     </main>
 
-    <footer class="container">
-        <small>&copy; @DateTime.Now.Year Northrup Family Recipe Archive</small>
+    <footer class="site-footer">
+        <div class="rf-wrap">
+            <small>&copy; @DateTime.Now.Year Northrup Family Recipe Archive</small>
+        </div>
     </footer>
 
     <script src="https://unpkg.com/htmx.org@@2.0.4"></script>
